@@ -13,6 +13,20 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom">
 
+        <TextView
+            android:id="@+id/new_message_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorAccent"
+            android:text="+2"
+            android:elevation="2dp"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <Button
             android:id="@+id/button2"
             android:layout_width="48dp"
@@ -28,12 +42,12 @@
             android:id="@+id/reyclerview_message_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button2"></android.support.v7.widget.RecyclerView>
+            app:layout_constraintTop_toBottomOf="@id/button2">
+
+        </android.support.v7.widget.RecyclerView>
 
         <!-- A horizontal line between the chatbox and RecyclerView -->
         <View

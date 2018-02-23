@@ -5,13 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -22,7 +22,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import snowroller.globalchat.adapter.MessageHolder;
+
+import snowroller.globalchat.adapter.MessageFirestoreRecyclerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         text = findViewById(R.id.edittext_chatbox);
         recyclerView = findViewById(R.id.reyclerview_message_list);
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
         getMessages();
 
     }
@@ -46,33 +49,16 @@ public class MainActivity extends AppCompatActivity {
     private void getMessages() {
 
         //Create query to get latest 50 messages
-        Query query = db.collection("messages").orderBy("timestamp")
-                .limit(50);
-
+        Query query = db.collection("messages")
+                      .orderBy("timestamp", Query.Direction.DESCENDING)
+                      .limit(50);
 
         FirestoreRecyclerOptions<Message> options =
                 new FirestoreRecyclerOptions.Builder<Message>()
                 .setQuery(query, Message.class)
                 .build();
 
-             adapter = new FirestoreRecyclerAdapter<Message, MessageHolder>(options) {
-            @Override
-            public void onBindViewHolder(MessageHolder holder, int position, Message model) {
-                // Bind the Chat object to the ChatHolder
-                // ...
-                holder.bindMessage(model, position);
-            }
-
-            @Override
-            public MessageHolder onCreateViewHolder(ViewGroup group, int i) {
-                // Create a new instance of the ViewHolder, in this case we are using a custom
-                // layout called R.layout.message for each item
-                View view = LayoutInflater.from(group.getContext())
-                        .inflate(R.layout.message, group, false);
-
-                return new MessageHolder(view);
-            }
-        };
+             adapter = new MessageFirestoreRecyclerAdapter(Glide.with(this),options);
 
         recyclerView.setAdapter(adapter);
     }

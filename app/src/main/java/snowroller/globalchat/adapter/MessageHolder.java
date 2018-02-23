@@ -2,12 +2,11 @@ package snowroller.globalchat.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 
 import snowroller.globalchat.Message;
@@ -18,22 +17,24 @@ import snowroller.globalchat.R;
  */
 
 public class MessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private static final int MAX_WIDTH = 200;
-    private static final int MAX_HEIGHT = 200;
+    private static final int MAX_WIDTH = 128;
+    private static final int MAX_HEIGHT = 128;
     View mView;
     Context mContext;
+    public TextView view;
+    public ImageView imageView;
 
     public MessageHolder(View itemView) {
         super(itemView);
         mView = itemView;
         mContext = itemView.getContext();
+        view = mView.findViewById(R.id.textView);
+        imageView = mView.findViewById(R.id.imageView);
         itemView.setOnClickListener(this);
     }
 
-    public void bindMessage(Message message, int position) {
-        TextView view = mView.findViewById(R.id.textView);
-        view.setAutoLinkMask(Linkify.ALL);
-        ImageView imageView = mView.findViewById(R.id.imageView);
+    public void bindMessage(Message message, int position, RequestManager glide) {
+
         view.setText(message.getText());
 
 //        if (isImagePosition(position)) {
@@ -46,8 +47,9 @@ public class MessageHolder extends RecyclerView.ViewHolder implements View.OnCli
 //            holder.imageView.setImageDrawable(specialDrawable);
 //        }
 
+        //Glide.with(mContext).clear(imageView);
 
-        Glide.with(mContext)
+            glide
                 .load(message.getPhotoUrl())
                 .apply(RequestOptions
                         .circleCropTransform()
